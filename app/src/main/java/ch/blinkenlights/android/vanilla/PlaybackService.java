@@ -431,7 +431,7 @@ public final class PlaybackService extends Service
 	/**
 	 * Referente to our playlist observer
 	 */
-	private PlaylistObserver mPlaylistObserver;
+	private LegacyPlaylistObserver mPlaylistObserver;
 	/**
 	 * Reference to precreated BASTP Object
 	 */
@@ -508,7 +508,7 @@ public final class PlaybackService extends Service
 		int syncMode = Integer.parseInt(settings.getString(PrefKeys.PLAYLIST_SYNC_MODE, PrefDefaults.PLAYLIST_SYNC_MODE));
 		boolean exportRelativePaths = settings.getBoolean(PrefKeys.PLAYLIST_EXPORT_RELATIVE_PATHS, PrefDefaults.PLAYLIST_EXPORT_RELATIVE_PATHS);
 		String syncFolder = settings.getString(PrefKeys.PLAYLIST_SYNC_FOLDER, PrefDefaults.PLAYLIST_SYNC_FOLDER);
-		mPlaylistObserver = new PlaylistObserver(this, syncFolder, syncMode, exportRelativePaths);
+		mPlaylistObserver = new LegacyPlaylistObserver(this, syncFolder, syncMode, exportRelativePaths);
 
 		mLooper = thread.getLooper();
 		mHandler = new Handler(mLooper, this);
@@ -941,7 +941,7 @@ public final class PlaybackService extends Service
 			String syncFolder = settings.getString(PrefKeys.PLAYLIST_SYNC_FOLDER, PrefDefaults.PLAYLIST_SYNC_FOLDER);
 
 			mPlaylistObserver.unregister();
-			mPlaylistObserver = new PlaylistObserver(this, syncFolder, syncMode, exportRelativePaths);
+			mPlaylistObserver = new LegacyPlaylistObserver(this, syncFolder, syncMode, exportRelativePaths);
 		} else if (PrefKeys.SELECTED_THEME.equals(key) || PrefKeys.DISPLAY_MODE.equals(key)) {
 			// Theme changed: trigger a restart of all registered activites
 			ArrayList<TimelineCallback> list = sCallbacks;

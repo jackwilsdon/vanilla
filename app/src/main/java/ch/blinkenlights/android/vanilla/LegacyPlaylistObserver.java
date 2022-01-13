@@ -45,7 +45,7 @@ import java.util.zip.CRC32;
 import android.util.Log;
 
 
-public class PlaylistObserver extends SQLiteOpenHelper implements Handler.Callback {
+public class LegacyPlaylistObserver extends SQLiteOpenHelper implements Handler.Callback {
 	/**
 	 * Whether or not to write debug logs.
 	 */
@@ -112,7 +112,7 @@ public class PlaylistObserver extends SQLiteOpenHelper implements Handler.Callba
 	}
 
 
-	public PlaylistObserver(Context context, String folder, int mode, boolean exportRelativePaths) {
+	public LegacyPlaylistObserver(Context context, String folder, int mode, boolean exportRelativePaths) {
 		super(context, "playlist_observer.db", null, 1 /* version */);
 		mContext = context;
 		mSyncMode = mode;
