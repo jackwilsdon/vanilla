@@ -431,7 +431,7 @@ public final class PlaybackService extends Service
 	/**
 	 * Referente to our playlist observer
 	 */
-	private LegacyPlaylistObserver mPlaylistObserver;
+	private PlaylistObserver mPlaylistObserver;
 	/**
 	 * Reference to precreated BASTP Object
 	 */

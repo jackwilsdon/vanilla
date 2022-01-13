@@ -45,7 +45,7 @@ import java.util.zip.CRC32;
 import android.util.Log;
 
 
-public class LegacyPlaylistObserver extends SQLiteOpenHelper implements Handler.Callback {
+public class LegacyPlaylistObserver extends SQLiteOpenHelper implements Handler.Callback, PlaylistObserver {
 	/**
 	 * Whether or not to write debug logs.
 	 */
@@ -148,6 +148,7 @@ public class LegacyPlaylistObserver extends SQLiteOpenHelper implements Handler.
 	 * Unregisters this observer, the object must not be used anymore
 	 * after this function was called.
 	 */
+	@Override
 	public void unregister() {
 		MediaLibrary.unregisterLibraryObserver(mLibraryObserver);
 		mFileObserver.stopWatching();
