@@ -355,6 +355,7 @@ THE SOFTWARE.
 	<string name="playlist_sync_disabled">Disabled</string>
 	<string name="playlist_sync_folder_title">Synchronization folder</string>
 	<string name="playlist_sync_folder_summary">Folder to use for playlist synchronization</string>
+	<string name="playlist_sync_folder_error">Failed to select synchronization folder</string>
 	<string name="playlist_export_relative_paths_title">Export using relative paths</string>
 	<string name="playlist_export_relative_paths_summary">Reference file paths relative to the playlist</string>
 

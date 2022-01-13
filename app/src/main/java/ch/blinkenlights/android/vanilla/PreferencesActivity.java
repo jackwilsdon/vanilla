@@ -46,6 +46,8 @@ import android.content.Intent;
 import android.media.audiofx.AudioEffect;
 import android.net.Uri;
 import android.util.TypedValue;
+import android.widget.Toast;
+import androidx.annotation.RequiresApi;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -230,11 +232,56 @@ public class PreferencesActivity extends PreferenceActivity
 	}
 
 	public static class PlaylistFragment extends PreferenceFragment {
+		private static final int PICK_SYNC_FOLDER = 0;
+
 		@Override
 		public void onCreate(Bundle savedInstanceState)
 		{
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preference_playlist);
+
+			findPreference(PrefKeys.PLAYLIST_SYNC_FOLDER).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+				public boolean onPreferenceClick(Preference preference) {
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+						Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+						intent.addFlags(
+								Intent.FLAG_GRANT_READ_URI_PERMISSION |
+								Intent.FLAG_GRANT_WRITE_URI_PERMISSION |
+								Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION |
+								Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
+						);
+						// TODO: Switch this for an ActivityResultLauncher.
+						startActivityForResult(intent, PICK_SYNC_FOLDER);
+					} else {
+						startActivity(new Intent(getActivity(), PlaylistObserverDirActivity.class));
+					}
+
+					return true;
+				}
+			});
+		}
+
+		@RequiresApi(Build.VERSION_CODES.R)
+		public void onActivityResult(int requestCode, int resultCode, Intent data) {
+			if (requestCode != PICK_SYNC_FOLDER) {
+				return;
+			}
+
+			Activity activity = getActivity();
+			if (resultCode != RESULT_OK) {
+				Toast.makeText(activity, R.string.playlist_sync_folder_error, Toast.LENGTH_SHORT).show();
+				return;
+			}
+
+			Uri uri = data.getData();
+
+			// Persist access to the folder.
+			activity.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+			SharedPrefHelper.getSettings(activity)
+					.edit()
+					.putString(PrefKeys.PLAYLIST_SYNC_FOLDER, uri.toString())
+					.apply();
 		}
 	}
 

@@ -41,14 +41,11 @@ THE SOFTWARE.
 		android:entries="@array/playlist_sync_mode_entries"
 		android:entryValues="@array/playlist_sync_mode_values"
 		android:defaultValue="0" />
-	<PreferenceScreen
+	<Preference
 		android:dependency="playlist_sync_mode"
+		android:key="playlist_sync_folder"
 		android:title="@string/playlist_sync_folder_title"
-		android:summary="@string/playlist_sync_folder_summary">
-		<intent
-			android:targetPackage="ch.blinkenlights.android.vanilla"
-			android:targetClass="ch.blinkenlights.android.vanilla.PlaylistObserverDirActivity" />
-	</PreferenceScreen>
+		android:summary="@string/playlist_sync_folder_summary" />
 	<CheckBoxPreference
 		android:defaultValue="false"
 		android:dependency="playlist_sync_mode"
