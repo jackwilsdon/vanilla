@@ -57,7 +57,6 @@ import android.os.PowerManager;
 import android.os.Process;
 import android.os.SystemClock;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 import androidx.core.app.NotificationCompat;
 import java.lang.Math;
@@ -508,7 +507,9 @@ public final class PlaybackService extends Service
 		int syncMode = Integer.parseInt(settings.getString(PrefKeys.PLAYLIST_SYNC_MODE, PrefDefaults.PLAYLIST_SYNC_MODE));
 		boolean exportRelativePaths = settings.getBoolean(PrefKeys.PLAYLIST_EXPORT_RELATIVE_PATHS, PrefDefaults.PLAYLIST_EXPORT_RELATIVE_PATHS);
 		String syncFolder = settings.getString(PrefKeys.PLAYLIST_SYNC_FOLDER, PrefDefaults.PLAYLIST_SYNC_FOLDER);
-		mPlaylistObserver = new LegacyPlaylistObserver(this, syncFolder, syncMode, exportRelativePaths);
+		mPlaylistObserver = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+			? new ScopedPlaylistObserver(this, syncFolder, syncMode, exportRelativePaths)
+			: new LegacyPlaylistObserver(this, syncFolder, syncMode, exportRelativePaths);
 
 		mLooper = thread.getLooper();
 		mHandler = new Handler(mLooper, this);
@@ -941,7 +942,9 @@ public final class PlaybackService extends Service
 			String syncFolder = settings.getString(PrefKeys.PLAYLIST_SYNC_FOLDER, PrefDefaults.PLAYLIST_SYNC_FOLDER);
 
 			mPlaylistObserver.unregister();
-			mPlaylistObserver = new LegacyPlaylistObserver(this, syncFolder, syncMode, exportRelativePaths);
+			mPlaylistObserver = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+					? new ScopedPlaylistObserver(this, syncFolder, syncMode, exportRelativePaths)
+					: new LegacyPlaylistObserver(this, syncFolder, syncMode, exportRelativePaths);
 		} else if (PrefKeys.SELECTED_THEME.equals(key) || PrefKeys.DISPLAY_MODE.equals(key)) {
 			// Theme changed: trigger a restart of all registered activites
 			ArrayList<TimelineCallback> list = sCallbacks;
